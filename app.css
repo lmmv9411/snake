@@ -1,0 +1,59 @@
+*{
+  font-family: 'Courier New', Courier, monospace;
+  font-size: medium;
+}
+.contenedor{
+  display: flex;
+  justify-content: center;
+  background-color: black;
+}
+
+canvas{
+  border-radius: 10px;
+}
+
+.controles{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;  
+  width: 500px;
+  margin: auto;
+}
+#mycanvas{
+  background: linear-gradient(to right, #000046, rgb(97, 0, 136));
+  border: 5px solid white;
+}
+
+.boton{
+  width: 80px;
+  height: 30px;
+  border-radius: 10px;
+  border-style: none;
+}
+
+body{
+  background-color: black;
+}
+
+.ptx{
+  color: white;
+  border: 1px solid white;
+  width: 100px;
+  padding: 5px 0;
+  text-align: center;
+  border-radius: 10px;
+}
+
+@media only screen and (max-width: 400px) {
+  #mycanvas{
+    width: 370px;
+  }
+  
+  .controles{
+    width: 370px;
+  }
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> 18715ad1d10108d99ad17ab3d652598058c3ddbe
