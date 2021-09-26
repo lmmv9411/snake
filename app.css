@@ -47,7 +47,9 @@ body{
 @media only screen and (max-width: 400px) {
   #mycanvas{
     width: 350px;
-    /*comentraio de prueba*/
+    /*comentraio de prueba
+      #2
+    */
   }
   
   .controles{
