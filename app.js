@@ -204,7 +204,11 @@ function colision() {
 }
 
 window.onkeydown = (e) => {
-  let [x, y] = MAP_DIRECCION[e.key];
+  direccion(e.key);
+}
+
+function direccion(map){
+  let [x, y] = MAP_DIRECCION[map];
   if (-x !== DIRECCION.x &&
     -y !== DIRECCION.y) {
     DIRECCION.x = x;
@@ -239,7 +243,12 @@ let xDown = null;
 let yDown = null;
 
 mycanvas.addEventListener('touchstart', handleTouchStart, false);
-mycanvas.addEventListener('touchmove', handleTouchMove, false);
+mycanvas.addEventListener('touchmove', (e) => {
+  let map = handleTouchMove(e);
+  if(map){
+    direccion(map);
+  }
+}, false);
 
 function handleTouchStart(e) {
   xDown = e.touches[0].clientX;
@@ -262,25 +271,23 @@ function handleTouchMove(e) {
   if (Math.abs(xDiff) > Math.abs(yDiff)) {
     //mas significativo
     if (xUp > xDown) {
-      DIRECCION.x = DIRECCION.x === 0 ? 1 : DIRECCION.x;
-      DIRECCION.y = 0;
+      return "ArrowRight";
     } else {
       //izquierda
-      DIRECCION.x = DIRECCION.x === 0 ? -1 : DIRECCION.x;
-      DIRECCION.y = 0;
+      return "ArrowLeft";
     }
   } else {
     if (yUp > yDown) {
-      DIRECCION.y = DIRECCION.y === 0 ? 1 : DIRECCION.y;
-      DIRECCION.x = 0;
+      return "ArrowDown";
     } else {
       //arriba
-      DIRECCION.y = DIRECCION.y === 0 ? -1 : DIRECCION.y;
-      DIRECCION.x = 0;
+      return "ArrowUp";
     }
   }
  
   xDown = null;
   yDown = null;
+
+  return null;
 
 }
