@@ -135,7 +135,8 @@ function dibujar() {
         localStorage.setItem('puntaje', puntos);
       }
       STATE = STOP;
-      AUDIO_LOSING.stop();
+      AUDIO_LOSING.pause();
+      AUDIO_LOSING.currentTime = 0;
     }
   }
 
@@ -238,45 +239,48 @@ play.onclick = e => {
 let xDown = null;
 let yDown = null;
 
-mycanvas.addEventListener('touchstart', handleTouchStart);
-mycanvas.addEventListener('touchmove', handleTouchMove);
+mycanvas.addEventListener('touchstart', handleTouchStart, false);
+mycanvas.addEventListener('touchmove', handleTouchMove, false);
 
 function handleTouchStart(e) {
-  const firstTouch = e.touches[0];
-  xDown = firstTouch.clientX;
-  yDown = firstTouch.clientY;
+  xDown = e.touches[0].clientX;
+  yDown = e.touches[0].clientY;
 }
 
 function handleTouchMove(e) {
   e.preventDefault();
 
+  if (!xDown || !yDown) {
+    return;
+  }
+
   let xUp = e.touches[0].clientX;
   let yUp = e.touches[0].clientY;
 
-  let xDiff = xDown - xUp;
-  let yDiff = yDown - yUp;
+  let xDiff = xUp - xDown;
+  let yDiff = yUp - yDown;
 
   if (Math.abs(xDiff) > Math.abs(yDiff)) {
-    /*most significant*/
-    if (xDiff > 0) {
+    //mas significativo
+    if (xUp > xDown) {
+      DIRECCION.x = DIRECCION.x === 0 ? 1 : DIRECCION.x;
+      DIRECCION.y = 0;
+    } else {
       //izquierda
       DIRECCION.x = DIRECCION.x === 0 ? -1 : DIRECCION.x;
       DIRECCION.y = 0;
-    } else {
-      DIRECCION.x = DIRECCION.x === 0 ? 1 : DIRECCION.x;
-      DIRECCION.y = 0;
     }
   } else {
-    if (yDiff > 0) {
+    if (yUp > yDown) {
+      DIRECCION.y = DIRECCION.y === 0 ? 1 : DIRECCION.y;
+      DIRECCION.x = 0;
+    } else {
       //arriba
       DIRECCION.y = DIRECCION.y === 0 ? -1 : DIRECCION.y;
       DIRECCION.x = 0;
-    } else {
-      DIRECCION.y = DIRECCION.y === 0 ? 1 : DIRECCION.y;
-      DIRECCION.x = 0;
     }
   }
-  /* reset values */
+ 
   xDown = null;
   yDown = null;
 
