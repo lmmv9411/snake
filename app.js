@@ -135,8 +135,7 @@ function dibujar() {
         localStorage.setItem('puntaje', puntos);
       }
       STATE = STOP;
-      AUDIO_LOSING.pause();
-      AUDIO_LOSING.currentTime = 0;
+
     }
   }
 
