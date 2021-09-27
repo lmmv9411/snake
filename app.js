@@ -1,22 +1,25 @@
+import { eventosTouch } from './eventos.js';
+
+const EVT= new eventosTouch();
+
 const cnvx = mycanvas.getContext('2d');
 const CUADRICULA_ANCHO = mycanvas.width / 50;
 const CUADRICULA_LARGO = mycanvas.height / 50;
+
 const cabeza = {
   x: generarPosicion().x,
   y: generarPosicion().y,
   w: CUADRICULA_ANCHO,
   h: CUADRICULA_LARGO
 };
-const comida = {
-  x: generarPosicion().x,
-  y: generarPosicion().y,
-  w: CUADRICULA_ANCHO,
-  h: CUADRICULA_LARGO
-};
+
+const comida = Object.assign({}, cabeza);
+
 const DIRECCION = {
   x: 0,
   y: 0
 };
+
 const MAP_DIRECCION = {
   'ArrowUp': [0, -1],
   'ArrowDown': [0, 1],
@@ -28,16 +31,35 @@ const LOSING = 1;
 const STOP = 2;
 
 let TICK = parseInt(1000 / 12);
-const grow_size = 10;
-let grow = grow_size / 2;
+const GROW_SIZE = 10;
+let grow = GROW_SIZE / 2;
 let STATE = RUNNING;
-let cola = cabeza;
 let cuerpo = [cabeza];
 let puntos = 0;
 const AUDIO_LOSING = new Audio('./assets/losing.wav');
-AUDIO_LOSING.volume = 0.2;
 let kto = null;
 let kra = null;
+
+
+window.onload = () => {
+  let p = localStorage.getItem('puntaje');
+  if (p) {
+    historia.textContent = p;
+  }
+
+  const pos = generarPosicion();
+
+  comida.x = pos.x;
+  comida.y = pos.y;
+  AUDIO_LOSING.volume = 0.2;
+
+  const [x, y] =  EVT.corregirDireccion(cabeza, mycanvas);
+  DIRECCION.x = x;
+  DIRECCION.y = y;
+
+  dibujar();
+}
+
 
 function generarPosicion() {
   return {
@@ -98,7 +120,7 @@ function dibujar() {
       comida.x = p.x;
       comida.y = p.y;
 
-      grow += grow_size;
+      grow += GROW_SIZE;
 
       let a = new Audio('assets/snake.wav');
       a.volume = 0.2;
@@ -141,38 +163,6 @@ function dibujar() {
 
 }
 
-window.onload = () => {
-  let p = localStorage.getItem('puntaje');
-  if (p) {
-    historia.textContent = p;
-  }
-
-  corregirDireccion();
-
-  dibujar();
-}
-
-function corregirDireccion() {
-  if (cabeza.x > cabeza.y) {
-    //horizontal
-    if (cabeza.x > mycanvas.width / 2) {
-      DIRECCION.x = -1;
-      DIRECCION.y = 0;
-    } else {
-      DIRECCION.x = 1;
-      DIRECCION.y = 0;
-    }
-  } else {
-    //vertical
-    if (cabeza.y > mycanvas.height / 2) {
-      DIRECCION.x = 0;
-      DIRECCION.y = -1;
-    } else {
-      DIRECCION.x = 0;
-      DIRECCION.y = 1;
-    }
-  }
-}
 
 function colision() {
   // cuerpo
@@ -203,11 +193,8 @@ function colision() {
 
 }
 
-window.onkeydown = (e) => {
-  direccion(e.key);
-}
 
-function direccion(map){
+function direccion(map) {
   let [x, y] = MAP_DIRECCION[map];
   if (-x !== DIRECCION.x &&
     -y !== DIRECCION.y) {
@@ -215,6 +202,9 @@ function direccion(map){
     DIRECCION.y = y;
   }
 }
+
+
+window.onkeydown = e => direccion(e.key);
 
 play.onclick = e => {
   cancelAnimationFrame(kra);
@@ -233,61 +223,18 @@ play.onclick = e => {
   if (pt) {
     historia.textContent = pt;
   }
-  grow = grow_size;
-  corregirDireccion();
+  grow = GROW_SIZE;
+  const [x, y] =  EVT.corregirDireccion(cabeza, mycanvas);
+  DIRECCION.x = x;
+  DIRECCION.y = y;
   cuerpo = [cabeza];
   dibujar();
 }
 
-let xDown = null;
-let yDown = null;
-
-mycanvas.addEventListener('touchstart', handleTouchStart, false);
-mycanvas.addEventListener('touchmove', (e) => {
-  let map = handleTouchMove(e);
-  if(map){
+mycanvas.addEventListener('touchstart', e => EVT.handleTouchStart(e), false);
+mycanvas.addEventListener('touchmove', e => {
+  const map = EVT.handleTouchMove(e);
+  if (map) {
     direccion(map);
   }
 }, false);
-
-function handleTouchStart(e) {
-  xDown = e.touches[0].clientX;
-  yDown = e.touches[0].clientY;
-}
-
-function handleTouchMove(e) {
-  e.preventDefault();
-
-  if (!xDown || !yDown) {
-    return;
-  }
-
-  let xUp = e.touches[0].clientX;
-  let yUp = e.touches[0].clientY;
-
-  let xDiff = xUp - xDown;
-  let yDiff = yUp - yDown;
-
-  if (Math.abs(xDiff) > Math.abs(yDiff)) {
-    //mas significativo
-    if (xUp > xDown) {
-      return "ArrowRight";
-    } else {
-      //izquierda
-      return "ArrowLeft";
-    }
-  } else {
-    if (yUp > yDown) {
-      return "ArrowDown";
-    } else {
-      //arriba
-      return "ArrowUp";
-    }
-  }
- 
-  xDown = null;
-  yDown = null;
-
-  return null;
-
-}
