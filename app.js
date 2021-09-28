@@ -212,11 +212,11 @@ play.onclick = e => {
   STATE = RUNNING;
   let p = generarPosicion();
   TICK = 1000 / 15;
-  comida.x = p.x;
-  comida.y = p.y;
+  comida.x = parseInt(p.x / CUADRICULA_ANCHO);
+  comida.y = parseInt(p.y / CUADRICULA_LARGO);
   p = generarPosicion();
-  cabeza.x = p.x;
-  cabeza.y = p.y;
+  cabeza.x = parseInt(p.x / CUADRICULA_ANCHO);
+  cabeza.y = parseInt(p.y / CUADRICULA_LARGO);
   puntos = 0;
   puntaje.textContent = 0;
   let pt = localStorage.getItem('puntaje');
