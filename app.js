@@ -42,7 +42,6 @@ const AUDIO_LOSING = new Audio('./assets/losing.wav');
 let kto = null;
 let kra = null;
 
-
 window.onload = () => {
   let p = localStorage.getItem('puntaje');
   if (p) {
@@ -61,7 +60,6 @@ window.onload = () => {
 
   dibujar();
 }
-
 
 function generarPosicion() {
   return {
@@ -145,6 +143,7 @@ function dibujar() {
         cuerpo[i].x = cuerpo[i - 1].x;
       }
     }
+   
   }
 
   if (STATE === LOSING) {
@@ -159,7 +158,6 @@ function dibujar() {
         localStorage.setItem('puntaje', puntos);
       }
       STATE = STOP;
-
     }
   }
 
@@ -195,14 +193,15 @@ function colision() {
 
 }
 
-
 function direccion(map) {
+
   let [x, y] = MAP_DIRECCION[map];
   if (-x !== DIRECCION.x &&
     -y !== DIRECCION.y) {
     DIRECCION.x = x;
     DIRECCION.y = y;
   }
+
 }
 
 
