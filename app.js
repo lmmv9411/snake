@@ -51,7 +51,6 @@ window.onload = () => {
 
   comida.x = pos.x;
   comida.y = pos.y;
-  AUDIO_LOSING.volume = 0.2;
 
   const [x, y] = EVT.corregirDireccion(cabeza, mycanvas);
   DIRECCION.x = x;
