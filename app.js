@@ -1,16 +1,18 @@
 import { eventosTouch } from './eventos.js';
 
-const EVT= new eventosTouch();
+const EVT = new eventosTouch();
 
 const cnvx = mycanvas.getContext('2d');
-const CUADRICULA_ANCHO = mycanvas.width / 50;
-const CUADRICULA_LARGO = mycanvas.height / 50;
+const CUADRO_ANCHO = mycanvas.width / 50;
+const CUADRO_LARGO = mycanvas.height / 50;
+
+let pos = generarPosicion();
 
 const cabeza = {
-  x: parseInt(generarPosicion().x / CUADRICULA_ANCHO),
-  y: parseInt(generarPosicion().y / CUADRICULA_LARGO),
-  w: CUADRICULA_ANCHO,
-  h: CUADRICULA_LARGO
+  x: pos.x,
+  y: pos.y,
+  w: CUADRO_ANCHO,
+  h: CUADRO_LARGO
 };
 
 const comida = Object.assign({}, cabeza);
@@ -47,13 +49,13 @@ window.onload = () => {
     historia.textContent = p;
   }
 
-  const pos = generarPosicion();
+  pos = generarPosicion();
 
-  comida.x = parseInt(pos.x / CUADRICULA_ANCHO);
-  comida.y = parseInt(pos.y / CUADRICULA_LARGO);
+  comida.x = pos.x;
+  comida.y = pos.y;
   AUDIO_LOSING.volume = 0.2;
 
-  const [x, y] =  EVT.corregirDireccion(cabeza, mycanvas);
+  const [x, y] = EVT.corregirDireccion(cabeza, mycanvas);
   DIRECCION.x = x;
   DIRECCION.y = y;
 
@@ -63,8 +65,8 @@ window.onload = () => {
 
 function generarPosicion() {
   return {
-    x: parseInt(Math.random() * (mycanvas.width - CUADRICULA_ANCHO)),
-    y: parseInt(Math.random() * (mycanvas.height - CUADRICULA_LARGO))
+    x: parseInt(Math.random() * (mycanvas.width - CUADRO_ANCHO)),
+    y: parseInt(Math.random() * (mycanvas.height - CUADRO_LARGO))
   };
 }
 
@@ -101,14 +103,14 @@ function dibujar() {
       cabeza.y + cuerpo[0].h > comida.y) {
 
       let t = true;
-      let p = generarPosicion();
-      let id = cnvx.getImageData(parseInt(p.x / CUADRICULA_ANCHO), parseInt(p.y / CUADRICULA_LARGO), 10, 10).data;
+      pos = generarPosicion();
+      let id = cnvx.getImageData(pos.x, pos.y, 10, 10).data;
       while (t) {
         t = false;
         for (let i = 0; i < id.length; i += 4) {
           if (id[i + 2] === 255 && id[i] === 255 && id[i + 1] === 255) {
-            p = generarPosicion();
-            id = cnvx.getImageData(parseInt(p.x / CUADRICULA_ANCHO), parseInt(p.y / CUADRICULA_LARGO), 10, 10).data;
+            pos = generarPosicion();
+            id = cnvx.getImageData(pos.x, pos.y, 10, 10).data;
             t = true;
             break;
           }
@@ -117,8 +119,8 @@ function dibujar() {
       puntos += 5;
       puntaje.textContent = puntos;
 
-      comida.x = p.x;
-      comida.y = p.y;
+      comida.x = pos.x;
+      comida.y = pos.y;
 
       grow += GROW_SIZE;
 
@@ -136,8 +138,8 @@ function dibujar() {
     //Avanza
     for (let i = cuerpo.length - 1; i > -1; i--) {
       if (i === 0) {
-        cabeza.x += (DIRECCION.x * CUADRICULA_ANCHO);
-        cabeza.y += (DIRECCION.y * CUADRICULA_LARGO);
+        cabeza.x += (DIRECCION.x * CUADRO_ANCHO);
+        cabeza.y += (DIRECCION.y * CUADRO_LARGO);
       } else {
         cuerpo[i].y = cuerpo[i - 1].y;
         cuerpo[i].x = cuerpo[i - 1].x;
@@ -210,13 +212,13 @@ play.onclick = e => {
   cancelAnimationFrame(kra);
   clearTimeout(kto);
   STATE = RUNNING;
-  let p = generarPosicion();
+  pos = generarPosicion();
   TICK = 1000 / 15;
-  comida.x = parseInt(p.x / CUADRICULA_ANCHO);
-  comida.y = parseInt(p.y / CUADRICULA_LARGO);
-  p = generarPosicion();
-  cabeza.x = parseInt(p.x / CUADRICULA_ANCHO);
-  cabeza.y = parseInt(p.y / CUADRICULA_LARGO);
+  comida.x = pos.x;
+  comida.y = pos.y;
+  pos = generarPosicion();
+  cabeza.x = pos.x;
+  cabeza.y = pos.y;
   puntos = 0;
   puntaje.textContent = 0;
   let pt = localStorage.getItem('puntaje');
@@ -224,7 +226,7 @@ play.onclick = e => {
     historia.textContent = pt;
   }
   grow = GROW_SIZE;
-  const [x, y] =  EVT.corregirDireccion(cabeza, mycanvas);
+  const [x, y] = EVT.corregirDireccion(cabeza, mycanvas);
   DIRECCION.x = x;
   DIRECCION.y = y;
   cuerpo = [cabeza];
