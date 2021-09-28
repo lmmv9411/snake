@@ -50,7 +50,7 @@ window.onload = () => {
   const pos = generarPosicion();
 
   comida.x = parseInt(pos.x / CUADRICULA_ANCHO);
-  comida.y = parseInt(pos.x / CUADRICULA_LARGO);
+  comida.y = parseInt(pos.y / CUADRICULA_LARGO);
   AUDIO_LOSING.volume = 0.2;
 
   const [x, y] =  EVT.corregirDireccion(cabeza, mycanvas);
@@ -102,13 +102,13 @@ function dibujar() {
 
       let t = true;
       let p = generarPosicion();
-      let id = cnvx.getImageData(p.x, p.y, 10, 10).data;
+      let id = cnvx.getImageData(parseInt(p.x / CUADRICULA_ANCHO), parseInt(p.y / CUADRICULA_LARGO), 10, 10).data;
       while (t) {
         t = false;
         for (let i = 0; i < id.length; i += 4) {
           if (id[i + 2] === 255 && id[i] === 255 && id[i + 1] === 255) {
             p = generarPosicion();
-            id = cnvx.getImageData(p.x, p.y, 10, 10).data;
+            id = cnvx.getImageData(parseInt(p.x / CUADRICULA_ANCHO), parseInt(p.y / CUADRICULA_LARGO), 10, 10).data;
             t = true;
             break;
           }
