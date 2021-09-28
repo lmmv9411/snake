@@ -7,8 +7,8 @@ const CUADRICULA_ANCHO = mycanvas.width / 50;
 const CUADRICULA_LARGO = mycanvas.height / 50;
 
 const cabeza = {
-  x: generarPosicion().x,
-  y: generarPosicion().y,
+  x: parseInt(generarPosicion().x / CUADRICULA_ANCHO),
+  y: parseInt(generarPosicion().y / CUADRICULA_LARGO),
   w: CUADRICULA_ANCHO,
   h: CUADRICULA_LARGO
 };
