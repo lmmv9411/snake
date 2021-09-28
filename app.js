@@ -49,8 +49,8 @@ window.onload = () => {
 
   const pos = generarPosicion();
 
-  comida.x = pos.x;
-  comida.y = pos.y;
+  comida.x = parseInt(pos.x / CUADRICULA_ANCHO);
+  comida.y = parseInt(pos.x / CUADRICULA_LARGO);
   AUDIO_LOSING.volume = 0.2;
 
   const [x, y] =  EVT.corregirDireccion(cabeza, mycanvas);
