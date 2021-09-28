@@ -38,7 +38,6 @@ let grow = GROW_SIZE / 2;
 let STATE = RUNNING;
 let cuerpo = [cabeza];
 let puntos = 0;
-const AUDIO_LOSING = new Audio('./assets/losing.wav');
 let kto = null;
 let kra = null;
 
@@ -157,6 +156,8 @@ function dibujar() {
       if (p < puntos) {
         localStorage.setItem('puntaje', puntos);
       }
+      const AUDIO_LOSING = new Audio('./assets/losing.wav');
+      AUDIO_LOSING.play();
       STATE = STOP;
     }
   }
@@ -172,7 +173,6 @@ function colision() {
       cabeza.y < cuerpo[i].y + cuerpo[i].h &&
       cabeza.y + cabeza.h > cuerpo[i].y) {
 
-      AUDIO_LOSING.play();
       STATE = LOSING;
       return true;
 
@@ -184,7 +184,6 @@ function colision() {
     cabeza.y + cabeza.h > mycanvas.height ||
     cabeza.y < 0) {
 
-    AUDIO_LOSING.play();
     STATE = LOSING;
     return true
   }
